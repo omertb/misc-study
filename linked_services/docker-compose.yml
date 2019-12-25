@@ -1,0 +1,46 @@
+version: "3.7"
+services:
+  http_server:
+    build: Dockerfile_http_server/.
+    depends_on:
+      - db_server
+    ports: 
+      - "80"
+    networks:
+      - inter-services-net
+    volumes:
+      - ./web:/var/www/html:rw,delegated
+# for docker swarm, instead use docker-compose scale http_server=3
+#    deploy:
+#      replicas: 3
+    links:
+      - db_server
+
+  db_server:
+    image: mariadb
+    ports:
+    - "3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: SECUREPASS
+    networks:
+      - inter-services-net
+
+  haproxy_server:
+    image: eeacms/haproxy
+    depends_on:
+      - http_server
+    ports:
+      - "80:5000"
+      - "1936:1936"
+    environment:
+      BACKENDS: "http_server"
+      DNS_ENABLED: "true"
+      LOG_LEVEL: "info"
+    networks:
+      - inter-services-net
+    links:
+      - http_server
+
+networks:
+  inter-services-net:
