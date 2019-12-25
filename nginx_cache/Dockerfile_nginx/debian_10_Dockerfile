@@ -1,0 +1,10 @@
+FROM debian:10
+
+RUN apt-get update && apt-get install --no-install-recommends -y nginx-extras php7.0-fpm
+
+COPY nginx_conf/sites-available 
+
+RUN rm -rf /etc/nginx/sites-enabled/* && ln -s /etc/nginx/sites-available/xy.com.conf /etc/nginx/sites-enabled/
+
+EXPOSE 80/tcp 443/tcp
+CMD ["/usr/sbin/nginx", "-g", "daemon off;"]

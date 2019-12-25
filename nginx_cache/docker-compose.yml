@@ -1,0 +1,67 @@
+version: "3.7"
+services:
+  nginx:
+    build: Dockerfile_nginx/.
+    ports: 
+      - "80:80"
+      - "443:443"
+    networks:
+      - inter-services-net
+    links:
+      - xhost1
+      - xhost2
+      - xhost3
+      - yhost1
+      - yhost2
+      - yhost3
+
+  xhost1:
+    build: Dockerfile_backend/.
+    ports:
+    - "80"
+    - "443"
+    networks:
+      - inter-services-net
+
+  xhost2:
+    build: Dockerfile_backend/.
+    ports:
+    - "80"
+    - "443"
+    networks:
+      - inter-services-net
+
+  xhost3:
+    build: Dockerfile_backend/.
+    ports:
+    - "80"
+    - "443"
+    networks:
+      - inter-services-net
+
+  yhost1:
+    build: Dockerfile_backend/.
+    ports:
+    - "80"
+    - "443"
+    networks:
+      - inter-services-net
+
+  yhost2:
+    build: Dockerfile_backend/.
+    ports:
+    - "80"
+    - "443"
+    networks:
+      - inter-services-net
+    
+  yhost3:
+    build: Dockerfile_backend/.
+    ports:
+    - "80"
+    - "443"
+    networks:
+      - inter-services-net
+
+networks:
+  inter-services-net:
